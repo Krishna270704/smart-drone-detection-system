@@ -1,5 +1,8 @@
 .git
+.github
 .gitignore
+.vscode
+.idea
 __pycache__/
 *.pyc
 *.pyo
@@ -8,8 +11,6 @@ __pycache__/
 venv/
 .pytest_cache/
 .ipynb_checkpoints/
-.vscode/
-.idea/
 runs/
 datasets/
 .DS_Store

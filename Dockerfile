@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libsm6 \
     libxext6 \
     libgl1 \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
@@ -23,16 +24,18 @@ COPY . .
 # Create required directories
 RUN mkdir -p logs screenshots
 
-# Expose Hugging Face Spaces default port
-EXPOSE 7860
+# Render sets PORT dynamically; default to 7860 for HuggingFace / local
+ENV PORT=7860
+EXPOSE $PORT
 
 # Healthcheck
-HEALTHCHECK CMD curl --fail http://localhost:7860/_stcore/health || exit 1
+HEALTHCHECK CMD curl --fail http://localhost:${PORT}/_stcore/health || exit 1
 
-# Start Streamlit
-CMD ["streamlit", "run", "streamlit_app.py", \
-     "--server.port=7860", \
-     "--server.address=0.0.0.0", \
-     "--server.enableCORS=false", \
-     "--server.enableXsrfProtection=false", \
-     "--browser.gatherUsageStats=false"]
+# Start Streamlit using shell form so $PORT is expanded at runtime
+CMD streamlit run streamlit_app.py \
+    --server.port=$PORT \
+    --server.address=0.0.0.0 \
+    --server.headless=true \
+    --server.enableCORS=false \
+    --server.enableXsrfProtection=false \
+    --browser.gatherUsageStats=false
