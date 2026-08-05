@@ -57,7 +57,7 @@ class WebcamDetector:
             if not ret:
                 break
 
-            # ---------------- Tracking ---------------- #
+
             results = self.model.track(
                 frame,
                 persist=True,
@@ -67,12 +67,12 @@ class WebcamDetector:
 
             annotated_frame = results[0].plot()
 
-            # ---------------- FPS ---------------- #
+
             current_time = time.time()
             fps = 1 / (current_time - prev_time) if prev_time < current_time else 0
             prev_time = current_time
 
-            # ---------------- Counters ---------------- #
+
             drone_count = 0
             bird_count = 0
             aircraft_count = 0
@@ -106,7 +106,7 @@ class WebcamDetector:
                         if class_name == "Drone":
                             AlertService.trigger_alert("DRONE DETECTED")
 
-            # ---------------- Dashboard ---------------- #
+
             cv2.putText(annotated_frame, f"FPS : {int(fps)}", (20, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
             cv2.putText(annotated_frame, f"Drone : {drone_count}", (20, 65), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
             cv2.putText(annotated_frame, f"Bird : {bird_count}", (20, 100), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (255, 255, 0), 2)

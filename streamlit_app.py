@@ -4,12 +4,12 @@ import pandas as pd
 from PIL import Image
 import tempfile
 
-# Import existing modules
+
 from app.detection.detector import DroneDetector
 from app.config import MODEL_PATH
 from app.services.alert_service import AlertService
 
-# ---------------- Initialization ---------------- #
+
 
 st.set_page_config(
     page_title="Smart Drone Detection System",
@@ -35,10 +35,10 @@ def load_detection_data(csv_path: str) -> pd.DataFrame:
             return pd.DataFrame()
     return pd.DataFrame()
 
-# Load the detector instance
+
 detector = load_detector()
 
-# ---------------- Sidebar ---------------- #
+
 
 st.sidebar.title("Navigation")
 
@@ -57,7 +57,7 @@ page = st.sidebar.radio(
     ]
 )
 
-# Application state for settings
+
 if "conf_threshold" not in st.session_state:
     st.session_state.conf_threshold = 0.25
 if "save_result" not in st.session_state:
@@ -65,7 +65,7 @@ if "save_result" not in st.session_state:
 if "tracker_toggle" not in st.session_state:
     st.session_state.tracker_toggle = True
 
-# ---------------- HOME ---------------- #
+
 
 if page == "Home":
     st.title("🛸 Smart Drone Detection & Surveillance System")
@@ -88,7 +88,7 @@ if page == "Home":
 
     st.info("Navigate using the sidebar to explore detection modules, history, and analytics.")
 
-# ---------------- IMAGE DETECTION ---------------- #
+
 
 elif page == "Image Detection":
     st.header("📷 Image Detection")
@@ -142,7 +142,7 @@ elif page == "Image Detection":
                     if os.path.exists(tmp_path):
                         os.remove(tmp_path)
 
-# ---------------- VIDEO DETECTION ---------------- #
+
 
 elif page == "Video Detection":
     st.header("🎥 Video Detection")
@@ -171,7 +171,7 @@ elif page == "Video Detection":
                     drone_alert_triggered = False
 
                     for idx, res in enumerate(results):
-                        # Update progress randomly just for visual feedback (since total frames unknown in generator)
+
                         progress_bar.progress(min((idx % 100) / 100.0, 1.0))
                         
                         im_bgr = res.plot()
@@ -185,7 +185,7 @@ elif page == "Video Detection":
                         
                         writer.write(im_bgr)
                         
-                        # Check for drones to trigger alert once per video
+
                         if not drone_alert_triggered and res.boxes is not None:
                             for box in res.boxes:
                                 cls_id = int(box.cls[0])
@@ -217,7 +217,7 @@ elif page == "Video Detection":
                     if os.path.exists(out_path):
                         os.remove(out_path)
 
-# ---------------- WEBCAM ---------------- #
+
 
 elif page == "Webcam":
     st.header("📹 Webcam Detection")
@@ -235,7 +235,7 @@ elif page == "Webcam":
     
         if start_btn:
             try:
-                # Lazy import to prevent deployment crashes on Streamlit Cloud
+
                 from app.detection.webcam_detector import WebcamDetector
                 
                 st.warning("Webcam window opened. Press 'Q' inside the window to stop.")
@@ -245,7 +245,7 @@ elif page == "Webcam":
                 st.warning("⚠️ Webcam Detection is available only in the local desktop application.")
                 st.error(f"Initialization failed: {e}")
 
-# ---------------- DETECTION HISTORY ---------------- #
+
 
 elif page == "Detection History":
     st.header("📊 Detection History")
@@ -259,7 +259,7 @@ elif page == "Detection History":
     df = load_detection_data(csv_path)
 
     if not df.empty:
-        # Search, Sort, Filter
+
         col_search, col_sort, col_filter = st.columns(3)
         with col_search:
             search_term = st.text_input("🔍 Search Class Name (e.g., Drone)")
@@ -268,7 +268,7 @@ elif page == "Detection History":
         with col_filter:
             filter_class = st.selectbox("Filter Class", ["All"] + df['Class_Name'].unique().tolist() if 'Class_Name' in df.columns else ["All"])
 
-        # Apply Filters (Vectorized for Performance)
+
         if search_term:
             mask = df.astype(str).apply(lambda x: x.str.contains(search_term, case=False, na=False)).any(axis=1)
             df = df[mask]
@@ -276,14 +276,14 @@ elif page == "Detection History":
         if filter_class != "All" and 'Class_Name' in df.columns:
             df = df[df['Class_Name'] == filter_class]
             
-        # Apply Sorting
+
         df = df.sort_values(by=sort_by, ascending=False)
         
         st.dataframe(df)
     else:
         st.warning(f"No Detection History found at {csv_path}. Run the webcam detector to generate logs.")
 
-# ---------------- SCREENSHOT GALLERY ---------------- #
+
 
 elif page == "Screenshot Gallery":
     st.header("📸 Screenshot Gallery")
@@ -311,7 +311,7 @@ elif page == "Screenshot Gallery":
     else:
         st.warning("Screenshot folder not found. Take some screenshots during webcam detection!")
 
-# ---------------- ANALYTICS ---------------- #
+
 
 elif page == "Analytics":
     st.header("📈 Analytics")
@@ -340,7 +340,7 @@ elif page == "Analytics":
     else:
         st.warning("No data available for analytics (CSV missing or empty).")
 
-# ---------------- SETTINGS ---------------- #
+
 
 elif page == "Settings":
     st.header("⚙️ Settings")
@@ -357,7 +357,7 @@ elif page == "Settings":
     
     st.success("Settings applied temporarily for this session.")
 
-# ---------------- ABOUT ---------------- #
+
 
 elif page == "About":
     st.header("ℹ️ About Project")
