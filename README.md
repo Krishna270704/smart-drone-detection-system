@@ -1,122 +1,241 @@
+<div align="center">
+
 # 🛸 Smart Drone Detection & Surveillance System
 
-![Banner](https://via.placeholder.com/1200x300.png?text=Smart+Drone+Detection+System)
+[![Python](https://img.shields.io/badge/Python-3.12-blue.svg?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![YOLO11](https://img.shields.io/badge/YOLO11-Ultralytics-yellow.svg?style=for-the-badge&logo=yolo&logoColor=white)](https://ultralytics.com/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-5.0+-green.svg?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.40+-FF4B4B.svg?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io/)
+[![License](https://img.shields.io/badge/License-MIT-purple.svg?style=for-the-badge)](LICENSE)
 
-![Status](https://img.shields.io/badge/Status-Stable%20%2F%20Active-brightgreen)
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![YOLO](https://img.shields.io/badge/YOLO-11-yellow)
-![OpenCV](https://img.shields.io/badge/OpenCV-4.x-red)
-![Streamlit](https://img.shields.io/badge/Streamlit-UI-ff69b4)
-![Release](https://img.shields.io/badge/Release-v1.0.0-purple)
+*An advanced, AI-powered computer vision system for real-time aerial threat detection, tracking, and analytics.*
+
+[**Live Demo**](#live-demo) • [**Documentation**](#documentation) • [**Deployment**](#deployment-guide) • [**Contributing**](CONTRIBUTING.md)
+
+</div>
+
+---
+
+## 📑 Table of Contents
+- [Overview](#overview)
+- [Problem Statement](#problem-statement)
+- [Solution](#solution)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Folder Structure](#folder-structure)
+- [System Requirements](#system-requirements)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Screenshots](#screenshots)
+- [Deployment Guide](#deployment-guide)
+- [Future Scope](#future-scope)
+- [License](#license)
+- [Contact](#contact)
 
 ---
 
 ## 📖 Overview
-The Smart Drone Detection & Surveillance System is a highly optimized, real-time AI-powered application designed to detect, track, and log unauthorized drones, aircraft, and birds. Built for production, it features a scalable Singleton pattern for memory-efficient inference, a robust computer vision pipeline, and a modern web dashboard.
+
+The **Smart Drone Detection & Surveillance System** is a robust, end-to-end computer vision application designed to detect and track aerial objects—specifically distinguishing between drones, birds, and aircraft. Built with a custom-trained **YOLO11** model, it provides high-precision inference across images, recorded videos, and live webcam streams.
+
+This system is engineered with a modular, production-ready architecture, featuring a dynamic Streamlit dashboard for monitoring, historical analytics, and automated alerting.
+
+---
+
+## 🎯 Problem Statement
+
+The rapid proliferation of consumer and commercial drones poses significant security risks to restricted airspaces, critical infrastructure, and privacy. Traditional radar systems often fail to detect small, low-flying UAVs, and distinguishing a drone from a bird remains a complex challenge for conventional surveillance cameras. 
+
+There is a critical need for an automated, AI-driven visual detection system capable of real-time classification and tracking of aerial objects.
+
+---
+
+## 💡 Solution
+
+This project solves the aerial surveillance problem by deploying a highly optimized, state-of-the-art Deep Learning object detection model (YOLO11). The system:
+- **Classifies** objects into three categories: Drone, Bird, and Aircraft.
+- **Tracks** movement trajectories using ByteTrack to prevent duplicate counting.
+- **Alerts** operators instantly upon drone detection.
+- **Logs** all events into a structured CSV database for forensic analysis.
+- **Visualizes** system health and analytics through an interactive web dashboard.
+
+---
 
 ## ✨ Features
-- **Real-Time Webcam Tracking:** Live object detection utilizing ByteTrack for accurate frame-to-frame ID tracking.
-- **Media Analysis:** Upload images and videos for instant YOLO11 inference and downloadable processed outputs.
-- **Interactive Dashboard:** A full-featured Streamlit UI offering Analytics, Detection History, and a visual Screenshot Gallery.
-- **Alert System:** Triggers on-screen popups and console alerts instantly when unauthorized drones are detected.
-- **CSV Logging:** Automatically logs all unique detections (Timestamp, Track ID, Class, Confidence) into structured CSV files.
+
+- **Real-Time Video Analytics:** Process live RTSP/Webcam feeds with zero-latency inference.
+- **Batch Processing:** Upload and analyze static images or recorded MP4/AVI videos.
+- **Advanced Object Tracking:** Integrated ByteTrack for persistent ID assignment across video frames.
+- **Singleton Inference Engine:** Highly optimized memory management ensuring the model is loaded only once.
+- **Automated Event Logging:** Comprehensive CSV logging of detection timestamps, confidence scores, and tracker IDs.
+- **Screenshot Gallery:** Automated frame capturing during critical detection events.
+- **Interactive Dashboard:** Beautiful, responsive UI built with Streamlit for seamless operator control.
+- **Cloud Ready:** Fully containerized with Docker, deployable to Render, Hugging Face Spaces, and AWS.
+
+---
 
 ## 🛠 Tech Stack
-- **Core AI**: Ultralytics YOLO11
-- **Computer Vision**: OpenCV & ByteTrack
-- **Frontend / UI**: Streamlit
-- **Data Processing**: Pandas
-- **Language**: Python 3.10+
 
-## 🚀 Installation
-**1. Clone the repository:**
+**Core AI & Vision**
+- `Ultralytics YOLO11` - Object Detection & Tracking
+- `PyTorch` - Deep Learning Backend
+- `OpenCV-Python` - Image Processing & Video I/O
+
+**Application & UI**
+- `Streamlit` - Frontend Dashboard & State Management
+- `Pandas` - Data Aggregation & Analytics
+- `Pillow` - Image Manipulation
+
+**DevOps & Deployment**
+- `Docker` - Containerization
+- `Render / Hugging Face` - Cloud Hosting
+
+---
+
+## 📁 Folder Structure
+
+A quick glance at the repository architecture. For a deep dive, see [PROJECT_STRUCTURE.md](docs/PROJECT_STRUCTURE.md).
+
+```text
+smart-drone-detection-system/
+├── app/                        # Core application modules
+│   ├── config.py               # Global configuration variables
+│   ├── detection/              # Inference wrappers (Image, Video, Webcam)
+│   └── services/               # Background services (Logging, Alerts)
+├── datasets/                   # (Ignored) Training data (Images/Labels)
+├── docs/                       # Comprehensive documentation & architecture
+├── logs/                       # Generated CSV detection logs
+├── models/                     # Trained YOLO weights (best.pt)
+├── screenshots/                # Auto-saved detection frames
+├── tests/                      # Unit and integration tests
+├── Dockerfile                  # Production container definition
+├── requirements.txt            # Python dependencies
+└── streamlit_app.py            # Main application entry point
+```
+
+---
+
+## 💻 System Requirements
+
+**Local Execution (Windows/Linux/Mac):**
+- Python 3.10 to 3.12
+- 4GB+ RAM (8GB Recommended)
+- Webcam (Required for live detection module)
+- *Optional:* NVIDIA GPU (CUDA Toolkit 11.8+) for accelerated inference
+
+**Cloud Deployment:**
+- Docker Engine
+- 2GB+ RAM Container Instance
+
+---
+
+## ⚙️ Installation
+
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/Krishna270704/smart-drone-detection-system.git
 cd smart-drone-detection-system
 ```
-**2. Create a virtual environment:**
+
+### 2. Create a Virtual Environment
 ```bash
-python -m venv .venv
-.venv\Scripts\activate   # Windows
-source .venv/bin/activate # Linux/macOS
+python -m venv venv
+# Windows
+venv\Scripts\activate
+# Linux/Mac
+source venv/bin/activate
 ```
-**3. Install dependencies:**
+
+### 3. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-## 📂 Folder Structure
-```text
-smart-drone-detection-system/
-├── app/
-│   ├── detection/
-│   │   ├── detector.py          # Core YOLO Singleton Wrapper
-│   │   ├── image_detector.py    # Image inference logic
-│   │   ├── video_detector.py    # Video inference & processing
-│   │   └── webcam_detector.py   # Live tracking & OpenCV window
-│   ├── services/
-│   │   ├── alert_service.py     # Centralized alert system
-│   │   ├── csv_logger.py        # Detection history exporter
-│   │   └── logger.py            # Standardized console logging
-│   └── config.py                # Global configurations
-├── logs/                        # Auto-generated CSV and text logs
-├── models/                      # Directory for YOLO weights (best.pt)
-├── screenshots/                 # Auto-saved webcam captures
-├── main.py                      # CLI Application Entrypoint
-├── streamlit_app.py             # Streamlit Web Dashboard Entrypoint
-├── requirements.txt             # Project Dependencies
-└── packages.txt                 # Deployment dependencies
-```
+*(Note: The repository uses `opencv-python-headless` to ensure cloud compatibility. If you plan to use the local webcam module on Windows, you may install `opencv-python` instead).*
 
-## 🏗 Project Architecture
-The system is built on a highly decoupled Service-Oriented Architecture (SOA):
-- **Singleton Model Cache:** The `DroneDetector` ensures the YOLO model is loaded into RAM only once, preventing memory bloat across the app.
-- **Detection Core:** Independent detection controllers for images, video, and live webcam feeds ensuring single-responsibility patterns.
-- **Service Layer:** Abstracts I/O functionality such as alert dispatching, CSV writing, and standardized logging.
+---
 
-## 📊 Dataset
-The model was trained on a comprehensive custom dataset consisting of diverse weather conditions, altitudes, and lighting environments to ensure robust classification between `Drones`, `Birds`, and general `Aircraft`.
+## 🚀 Usage
 
-## 🧠 Model
-Utilizes **YOLO11** (You Only Look Once), fine-tuned for high-speed edge inference. Weights are stored securely in `models/best.pt`. The model is integrated via Ultralytics' latest Python API, combining deep learning with ByteTrack for seamless object persistence.
+Start the Streamlit dashboard:
 
-## 🎮 Usage
-Run the following command to start the interactive Streamlit UI:
 ```bash
 streamlit run streamlit_app.py
 ```
-*For terminal users, `python main.py` provides a lightweight CLI alternative.*
 
-### 🖼 Image Detection
-Navigate to the **Image Detection** tab. Upload a `.jpg` or `.png` to immediately receive bounded predictions and instant Drone alerts.
+The application will launch in your default web browser at `http://localhost:8501`.
 
-### 🎥 Video Detection
-Navigate to the **Video Detection** tab. Upload an `.mp4` to process the stream frame-by-frame. The output is fully downloadable.
+**Modules Available:**
+1. **Home:** System status and model health.
+2. **Image Detection:** Upload images for instant classification.
+3. **Video Detection:** Process MP4s and download annotated results.
+4. **Webcam:** Launch local desktop live-feed with ByteTrack.
+5. **Detection History:** Search, filter, and sort the CSV logs.
+6. **Analytics:** View aggregate detection metrics.
 
-### 📹 Webcam Detection
-Navigate to the **Webcam** tab to launch the optimized OpenCV live feed. The resolution is scaled for maximum FPS. Press `S` to capture a screenshot or `Q` to quit.
-
-### 📊 Streamlit Dashboard
-Features a highly-responsive cache-enabled UI. Includes:
-- **Detection History:** Search, filter, and sort past detections.
-- **Analytics:** View total counts and charts based on CSV logs.
-- **Screenshot Gallery:** View all snapshots captured during live streams.
+---
 
 ## 📸 Screenshots
-*(Add your project screenshots here)*
-- `![Dashboard](docs/dashboard.png)`
-- `![Webcam](docs/webcam.png)`
 
-## 🔮 Future Improvements
-- Expand detection classes (e.g., specific drone models).
-- Add SMS/Email integration via Twilio for off-site alerts.
-- Migrate from CSV to PostgreSQL/Firebase for distributed analytics.
+*(Replace these placeholders with actual screenshots from your running app)*
+
+<div align="center">
+  <img src="https://via.placeholder.com/800x400?text=Dashboard+Overview" alt="Dashboard Overview" width="80%">
+  <p><i>Figure 1: Main Dashboard and System Status</i></p>
+  
+  <img src="https://via.placeholder.com/800x400?text=Live+Webcam+Detection" alt="Webcam Detection" width="80%">
+  <p><i>Figure 2: Real-time tracking of aerial objects</i></p>
+</div>
+
+---
+
+## 🌐 Live Demo
+
+*(Insert link when deployed)*
+**Check out the live deployment here: [Coming Soon]**
+
+---
+
+## ☁️ Deployment Guide
+
+The system is fully containerized and cloud-ready. See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for deployment architecture details.
+
+### Deploying via Docker (Local)
+```bash
+docker build -t drone-detector .
+docker run -p 7860:7860 drone-detector
+```
+
+### Deploying to Render
+1. Connect your GitHub repository to Render.
+2. Create a new **Web Service**.
+3. Environment: `Docker`.
+4. Render will automatically detect the `Dockerfile` and configure the `$PORT`.
+
+### Deploying to Hugging Face Spaces
+1. Create a new Docker space.
+2. Push the repository contents.
+3. The Space will automatically expose port `7860` as defined in the Dockerfile.
+
+---
+
+## 🔭 Future Scope
+
+- **Audio Integration:** Combine vision with acoustic sensors for drone rotor noise detection.
+- **PTZ Camera Control:** Output tracking coordinates to physically move Pan-Tilt-Zoom cameras.
+- **Night Vision / Thermal:** Train secondary models on IR datasets for 24/7 operability.
+- **Edge Deployment:** Convert models to TensorRT/ONNX for deployment on NVIDIA Jetson Nanos.
+
+---
 
 ## 📄 License
-Distributed under the MIT License. See `LICENSE` for more information.
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
 
 ## 📞 Contact
-**Krishna**  
-Senior AI Software Engineer & Full Stack Developer  
-- **GitHub:** [Krishna270704](https://github.com/Krishna270704)
-- **LinkedIn:** [Krishna](https://www.linkedin.com/in/krishna-104b6627a)
+
+**Krishna Rajput**  
+AI Engineer & Developer  
+GitHub: [@Krishna270704](https://github.com/Krishna270704)
