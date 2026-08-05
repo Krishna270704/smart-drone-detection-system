@@ -3,11 +3,9 @@ import os
 import pandas as pd
 from PIL import Image
 import tempfile
-import cv2
 
 # Import existing modules
 from app.detection.detector import DroneDetector
-from app.detection.webcam_detector import WebcamDetector
 from app.config import MODEL_PATH
 from app.services.alert_service import AlertService
 
@@ -116,6 +114,7 @@ elif page == "Image Detection":
                     results = detector.detect(source=tmp_path, conf=conf_slider)
                     
                     if results:
+                        import cv2
                         res = results[0]
                         res_plotted = res.plot()
                         res_rgb = cv2.cvtColor(res_plotted, cv2.COLOR_BGR2RGB)
@@ -166,6 +165,7 @@ elif page == "Video Detection":
                 progress_bar = st.progress(0)
                 
                 try:
+                    import cv2
                     results = detector.detect(source=tmp_path, conf=st.session_state.conf_threshold, stream=True)
                     writer = None
                     drone_alert_triggered = False
@@ -223,19 +223,27 @@ elif page == "Webcam":
     st.header("📹 Webcam Detection")
     st.info("This will launch the desktop OpenCV window for webcam detection.")
     
-    col1, col2 = st.columns(2)
-    with col1:
-        start_btn = st.button("Start Webcam")
-    with col2:
-        st.info("To stop the webcam, click on the video window and press 'q'.")
-
-    if start_btn:
-        st.warning("Webcam window opened. Press 'Q' inside the window to stop.")
-        try:
-            WebcamDetector().start()
-            st.success("Webcam session ended.")
-        except Exception as e:
-            st.error(f"Error launching webcam: {e}")
+    import sys
+    if sys.platform == "linux":
+        st.warning("⚠️ Webcam Detection is available only in the local desktop application.")
+    else:
+        col1, col2 = st.columns(2)
+        with col1:
+            start_btn = st.button("Start Webcam")
+        with col2:
+            st.info("To stop the webcam, click on the video window and press 'q'.")
+    
+        if start_btn:
+            try:
+                # Lazy import to prevent deployment crashes on Streamlit Cloud
+                from app.detection.webcam_detector import WebcamDetector
+                
+                st.warning("Webcam window opened. Press 'Q' inside the window to stop.")
+                WebcamDetector().start()
+                st.success("Webcam session ended.")
+            except Exception as e:
+                st.warning("⚠️ Webcam Detection is available only in the local desktop application.")
+                st.error(f"Initialization failed: {e}")
 
 # ---------------- DETECTION HISTORY ---------------- #
 
